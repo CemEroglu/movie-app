@@ -1,0 +1,1 @@
+export const columnNames = ['Title', 'Release Date', 'Imdb ID']
