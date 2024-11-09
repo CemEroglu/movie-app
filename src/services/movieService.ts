@@ -25,6 +25,7 @@ export const getMovies = async (searchParameters: string) => {
           imdbID:item.imdbID,
           type:item.Type,
           plot: detailData.Plot,
+          released: detailData.Released,
           genre: detailData.Genre,
           director: detailData.Director,
           actors: detailData.Actors,

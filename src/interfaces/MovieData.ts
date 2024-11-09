@@ -3,4 +3,7 @@ export interface MovieData {
     released: string;
     imdbRating: string;
     type: string;
+    director:string;
+    imdbID: string;
+    poster:string;
   }
