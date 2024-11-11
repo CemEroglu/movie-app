@@ -9,7 +9,7 @@ function Home() {
   const [movies, setMovies] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
   const [numberOfPages, setNumberOfPages] = useState<number>(1);
-  const [filterText, setFilterText] = useState<string>('s=game');
+  const [filterText, setFilterText] = useState<string>('s=Pokemon');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
