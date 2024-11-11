@@ -5,6 +5,8 @@ import MovieTable from '../components/MovieTable'
 import Filters from '../components/Filters'
 import { Pagination } from "@mui/material";
 import './Home.css'
+import { Dayjs } from "dayjs";
+import { MovieData } from '../interfaces/MovieData'
 function Home() {
   const [movies, setMovies] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
@@ -12,6 +14,10 @@ function Home() {
   const [filterText, setFilterText] = useState<string>('s=Pokemon');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [searchText, setSearchText] = useState<string>("Pokemon");
+  const [selectedYear, setSelectedYear] = useState<Dayjs | null>(null);
+  const [type, setType] = useState<string>("");
 
   useEffect(() => {
       const fetchUser = async () => {
@@ -38,7 +44,22 @@ function Home() {
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
       setPage(value);
   };
-
+  const applyFilters = () => {
+    let newFilterText = `s=${searchText}`;
+    if (selectedYear) {
+        newFilterText = `${newFilterText}&y=${selectedYear.year()}`;
+    }
+    if (type) {
+        newFilterText = `${newFilterText}&type=${type}`;
+    }
+    setPage(1);
+    setFilterText(newFilterText);
+};
+const clearFilters = () => {
+    setSearchText("");
+    setSelectedYear(null);
+    setType("");
+};
   return (
       <div className='homepage-container'>
           {loading ? (
@@ -47,7 +68,17 @@ function Home() {
               <span style={{ marginTop: '15%' }}>{error}</span>
           ) : numberOfPages > 0 ? (
               <>
-                  <Filters filterText={filterText} setFilterText={setFilterText} setPage={setPage} />
+                  <Filters
+                      filterText={filterText}
+                      searchText={searchText}
+                      setSearchText={setSearchText}
+                      selectedYear={selectedYear}
+                      setSelectedYear={setSelectedYear}
+                      type={type}
+                      setType={setType}
+                      applyFilters={applyFilters}
+                      clearFilters={clearFilters}
+                  />
                   <MovieTable data={movies} />
                   <Pagination
                       count={numberOfPages}

@@ -11,30 +11,29 @@ import './Filters.css'
 
 interface FilterProps {
   filterText: string;
-  setFilterText: React.Dispatch<React.SetStateAction<string>>;
-  setPage:React.Dispatch<React.SetStateAction<number>>;
+  searchText: string;
+  setSearchText: React.Dispatch<React.SetStateAction<string>>;
+  selectedYear: Dayjs | null;
+  setSelectedYear: React.Dispatch<React.SetStateAction<Dayjs | null>>;
+  type: string;
+  setType: React.Dispatch<React.SetStateAction<string>>;
+  applyFilters: () => void;
+  clearFilters: () => void;
 }
 
-const Filters: React.FC<FilterProps> = ({ filterText, setFilterText, setPage }) => {
-  const [searchText, setSearchText] = useState<string>("");
-  const [selectedYear, setSelectedYear] = useState<Dayjs | null>(null);
-  const [type, setType] = useState<string>('');
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    let newFilterText  = `s=${searchText}`
-    if(selectedYear){
-        newFilterText = `${newFilterText}&y=${selectedYear.year()}`
-    }
-    if(type){
-        newFilterText = `${newFilterText}&type=${type}`
-    }
-    setPage(1);
-    setFilterText(newFilterText)
-  };
+const Filters: React.FC<FilterProps> = ({
+  searchText,
+  setSearchText,
+  selectedYear,
+  setSelectedYear,
+  type,
+  setType,
+  applyFilters,
+  clearFilters,
+}) => {
 
   return (
-    <form className="filter-container" onSubmit={handleSubmit}>
+    <div className="filter-container">
       <TextField
         required
         label="Search Movies"
@@ -58,22 +57,17 @@ const Filters: React.FC<FilterProps> = ({ filterText, setFilterText, setPage }) 
           name="type-group"
         >
           <FormControlLabel value="movie" control={<Radio />} label="Movie" />
-          <FormControlLabel
-            value="series"
-            control={<Radio />}
-            label="TV Series"
-          />
-          <FormControlLabel
-            value="episode"
-            control={<Radio />}
-            label="TV Series Episodes"
-          />
+          <FormControlLabel value="series" control={<Radio />} label="TV Series" />
+          <FormControlLabel value="episode" control={<Radio />} label="TV Series Episodes" />
         </RadioGroup>
       </FormControl>
-      <Button variant="contained" type="submit" sx={{ marginTop: 2 }}>
+      <Button variant="contained" onClick={applyFilters}>
         Submit
       </Button>
-    </form>
+      <Button variant="outlined" onClick={clearFilters}>
+        Clear Filters
+      </Button>
+    </div>
   );
 };
 
