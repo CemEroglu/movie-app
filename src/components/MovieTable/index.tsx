@@ -11,19 +11,18 @@ import {
   Paper,
 } from "@mui/material";
 
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 import SearchIcon from "@mui/icons-material/Search";
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { MovieData } from "../../interfaces/MovieData";
+import Filters from "../Filters";
 interface MovieTableProps {
   data: MovieData[];
-  searchText: string;
-  setSearchText: React.Dispatch<React.SetStateAction<string>>;
 }
 interface SortDirection {
   [key: string]: "asc" | "desc";
@@ -31,25 +30,26 @@ interface SortDirection {
 
 const MovieTable: React.FC<MovieTableProps> = ({
   data,
-  searchText,
-  setSearchText,
 }) => {
   const [sortDirection, setSortDirection] = useState<SortDirection>({
     title: "asc",
   });
   const [sortedMovies, setSortedMovies] = useState<MovieData[]>(data);
+  useEffect(() => {
+    setSortedMovies(data);
+  }, [data]);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.toLowerCase();
-    setSearchText(value);
+  // const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value.toLowerCase();
+  //   setSearchText(value);
 
-    const filteredMovies = data.filter(
-      (movie) => movie.title.toLowerCase().includes(value)
-      // movie.title.toLowerCase().includes(value) || movie.director.toLowerCase().includes(value)
-    );
+  //   const filteredMovies = data.filter(
+  //     (movie) => movie.title.toLowerCase().includes(value)
+  //     // movie.title.toLowerCase().includes(value) || movie.director.toLowerCase().includes(value)
+  //   );
 
-    setSortedMovies(filteredMovies);
-  };
+  //   setSortedMovies(filteredMovies);
+  // };
 
   const handleSort = (column: keyof MovieData) => {
     const direction = sortDirection[column] === "asc" ? "desc" : "asc";
@@ -65,41 +65,42 @@ const MovieTable: React.FC<MovieTableProps> = ({
   };
 
   return (
-    <Paper sx={{ width: "80%", overflow: "hidden" }}>
-      <TextField
+    <Paper sx={{ width: "70%", overflow: "hidden" }}>
+      {/* <TextField
         label="Search Movies"
         variant="outlined"
         value={searchText}
         onChange={handleSearch}
         sx={{ marginBottom: 2, marginTop: 1 }}
       />
-      <DatePicker 
-      label={'"Year"'} 
-      views={['year']}
-      sx={{ marginBottom: 2, marginTop: 1 }}
-       />
+      <DatePicker
+        label={'"Year"'}
+        views={["year"]}
+        sx={{ marginBottom: 2, marginTop: 1 }}
+      />
 
-        <FormControl>
-      <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
-      <RadioGroup
-        aria-labelledby="demo-radio-buttons-group-label"
-        defaultValue="female"
-        name="radio-buttons-group"
-        onChange={(e)=>{alert(e.target.value)}}
-      >
-        <FormControlLabel value="female" control={<Radio />} label="Female" />
-        <FormControlLabel value="male" control={<Radio />} label="Male" />
-        <FormControlLabel value="other" control={<Radio />} label="Other" />
-      </RadioGroup>
-    </FormControl>
-
+      <FormControl>
+        <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+        <RadioGroup
+          aria-labelledby="demo-radio-buttons-group-label"
+          defaultValue="female"
+          name="radio-buttons-group"
+          onChange={(e) => {
+            alert(e.target.value);
+          }}
+        >
+          <FormControlLabel value="female" control={<Radio />} label="Female" />
+          <FormControlLabel value="male" control={<Radio />} label="Male" />
+          <FormControlLabel value="other" control={<Radio />} label="Other" />
+        </RadioGroup>
+      </FormControl>
+      <Filters searchText={searchText} setSearchText={setSearchText}/> */}
 
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-              </TableCell>
+              <TableCell></TableCell>
               <TableCell>
                 <TableSortLabel
                   active={true}
@@ -136,9 +137,7 @@ const MovieTable: React.FC<MovieTableProps> = ({
                   IMDB Rating
                 </TableSortLabel>
               </TableCell>
-              <TableCell>
-                  IMDB ID
-              </TableCell>
+              <TableCell>IMDB ID</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -1,16 +1,15 @@
-const generateEndpoint = (searchParameters: string)=>{
-    //Usually the api keys shouldn't be located in files, but since it's a dummy api key it is okay for now.
-    return 'https://www.omdbapi.com/?' + searchParameters + '&apikey=50084941';
-}
-
-export const getMovies = async (searchParameters: string) => {
+export const getMovies = async (searchParameters: string, page:number) => {
     // let url = `https://www.omdbapi.com/?s=${searchParameters}&apikey=50084941`;
-    let url = 'https://www.omdbapi.com/?s=game&apikey=50084941'
+    // let url = 'https://www.omdbapi.com/?s=game&apikey=50084941'
+    // https://www.omdbapi.com/?s=game&y=2019&page=1&apikey=50084941
+    let url = `https://www.omdbapi.com/?${searchParameters}&page=${page}&apikey=50084941`
     const response = await fetch(url, { method: 'GET' });
     const data = await response.json();
-    
+    console.log(data)
     if (data.Response === "True") {
       const searchResults = data.Search;
+      const totalResults = parseInt(data.totalResults, 10);
+      const numberOfPages = Math.ceil(totalResults/10)
   
       // Fetch detailed information for each movie/series
       const detailedResults = await Promise.all(searchResults.map(async (item:any) => {
@@ -37,9 +36,9 @@ export const getMovies = async (searchParameters: string) => {
         };
       }));
   
-      return detailedResults;
+      return {detailedResults, numberOfPages };
     } else {
-      return [];
+      return { detailedResults: [], numberOfPages: 0 };
     }
   };
   
