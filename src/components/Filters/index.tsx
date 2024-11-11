@@ -22,9 +22,6 @@ const Filters: React.FC<FilterProps> = ({ filterText, setFilterText, setPage }) 
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("Search Text:", searchText);
-    console.log("Selected Year:", selectedYear ? selectedYear.year() : null);
-    console.log("Gender:", type);
     let newFilterText  = `s=${searchText}`
     if(selectedYear){
         newFilterText = `${newFilterText}&y=${selectedYear.year()}`

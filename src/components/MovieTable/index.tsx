@@ -7,20 +7,11 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
-  TextField,
   Paper,
 } from "@mui/material";
 
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-
-import SearchIcon from "@mui/icons-material/Search";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { MovieData } from "../../interfaces/MovieData";
-import Filters from "../Filters";
+
 interface MovieTableProps {
   data: MovieData[];
 }
@@ -28,9 +19,7 @@ interface SortDirection {
   [key: string]: "asc" | "desc";
 }
 
-const MovieTable: React.FC<MovieTableProps> = ({
-  data,
-}) => {
+const MovieTable: React.FC<MovieTableProps> = ({ data }) => {
   const [sortDirection, setSortDirection] = useState<SortDirection>({
     title: "asc",
   });
@@ -39,25 +28,25 @@ const MovieTable: React.FC<MovieTableProps> = ({
     setSortedMovies(data);
   }, [data]);
 
-  // const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = event.target.value.toLowerCase();
-  //   setSearchText(value);
-
-  //   const filteredMovies = data.filter(
-  //     (movie) => movie.title.toLowerCase().includes(value)
-  //     // movie.title.toLowerCase().includes(value) || movie.director.toLowerCase().includes(value)
-  //   );
-
-  //   setSortedMovies(filteredMovies);
-  // };
-
   const handleSort = (column: keyof MovieData) => {
     const direction = sortDirection[column] === "asc" ? "desc" : "asc";
     setSortDirection({ ...sortDirection, [column]: direction });
 
     const sortedData = [...sortedMovies].sort((a, b) => {
-      if (a[column] < b[column]) return direction === "asc" ? -1 : 1;
-      if (a[column] > b[column]) return direction === "asc" ? 1 : -1;
+      let aValue = a[column];
+      let bValue = b[column];
+
+      if (column === "released") {
+        // Convert to Date objects only for comparison
+        const aDate = new Date(aValue as string);
+        const bDate = new Date(bValue as string);
+        if (aDate < bDate) return direction === "asc" ? -1 : 1;
+        if (aDate > bDate) return direction === "asc" ? 1 : -1;
+        return 0;
+      }
+
+      if (aValue < bValue) return direction === "asc" ? -1 : 1;
+      if (aValue > bValue) return direction === "asc" ? 1 : -1;
       return 0;
     });
 
@@ -66,36 +55,6 @@ const MovieTable: React.FC<MovieTableProps> = ({
 
   return (
     <Paper sx={{ width: "70%", overflow: "hidden" }}>
-      {/* <TextField
-        label="Search Movies"
-        variant="outlined"
-        value={searchText}
-        onChange={handleSearch}
-        sx={{ marginBottom: 2, marginTop: 1 }}
-      />
-      <DatePicker
-        label={'"Year"'}
-        views={["year"]}
-        sx={{ marginBottom: 2, marginTop: 1 }}
-      />
-
-      <FormControl>
-        <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
-        <RadioGroup
-          aria-labelledby="demo-radio-buttons-group-label"
-          defaultValue="female"
-          name="radio-buttons-group"
-          onChange={(e) => {
-            alert(e.target.value);
-          }}
-        >
-          <FormControlLabel value="female" control={<Radio />} label="Female" />
-          <FormControlLabel value="male" control={<Radio />} label="Male" />
-          <FormControlLabel value="other" control={<Radio />} label="Other" />
-        </RadioGroup>
-      </FormControl>
-      <Filters searchText={searchText} setSearchText={setSearchText}/> */}
-
       <TableContainer>
         <Table>
           <TableHead>
@@ -122,7 +81,7 @@ const MovieTable: React.FC<MovieTableProps> = ({
               <TableCell>
                 <TableSortLabel
                   active={true}
-                  direction={sortDirection.year || "asc"}
+                  direction={sortDirection.released || "asc"}
                   onClick={() => handleSort("released")}
                 >
                   Released
@@ -131,7 +90,7 @@ const MovieTable: React.FC<MovieTableProps> = ({
               <TableCell>
                 <TableSortLabel
                   active={true}
-                  direction={sortDirection.year || "asc"}
+                  direction={sortDirection.imdbRating || "asc"}
                   onClick={() => handleSort("imdbRating")}
                 >
                   IMDB Rating
