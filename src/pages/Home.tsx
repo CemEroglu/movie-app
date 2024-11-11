@@ -6,7 +6,6 @@ import Filters from '../components/Filters'
 import { Pagination } from "@mui/material";
 import './Home.css'
 import { Dayjs } from "dayjs";
-import { MovieData } from '../interfaces/MovieData'
 function Home() {
   const [movies, setMovies] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
